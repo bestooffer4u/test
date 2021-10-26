@@ -4,274 +4,272 @@
 // =================================================================
 // =================================================================
 
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $("#followers-form").validator().on("submit", function(event) {
-        if (event.isDefaultPrevented()) {
-            formError1();
-        } else {
-            event.preventDefault();
-            submitForm1();
-        }
-    });
+	$("#followers-form").validator().on("submit", function (event) {
+		if (event.isDefaultPrevented()) {
+			formError1();
+		} else {
+			event.preventDefault();
+			submitForm1();
+		}
+	});
 
-    function submitForm1() {
-        window.location.href = 'processing_request.php' + '?username=' + $('#username').val();
-    }
+	function submitForm1() {
+		window.location.href = 'processing_request.php' + '?username=' + $('#username').val();
+	}
 
-    function formError1() {
-        $(".shake-wrapper").addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-            $(this).removeClass();
-        });
-    }
+	function formError1() {
+		$(".shake-wrapper").addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+			$(this).removeClass();
+		});
+	}
 
-    $(".post-new-comment-button-wrapp a").click(function() {
-        $(".shake-wrapper-2").addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-            $(this).removeClass('shake animated');
-        });
-    });
+	$(".post-new-comment-button-wrapp a").click(function () {
+		$(".shake-wrapper-2").addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+			$(this).removeClass('shake animated');
+		});
+	});
 
-    var $selected_followers = '';
-    $('.amount-of-followers-selection-item-wrapper').click(function() {
-        fixFollowersBox($(this));
-    });
+	var $selected_followers = '';
+	$('.amount-of-followers-selection-item-wrapper').click(function () {
+		fixFollowersBox($(this));
+	});
+	function fixFollowersBox($parent_class) {
+		resetAllFollowersBoxes();
+		if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-1')) {
+			$selected_followers = '1000';
+		}
+		if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-2')) {
+			$selected_followers = '2500';
+		}
+		if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-3')) {
+			$selected_followers = '5000';
+		}
+		$parent_class.addClass('followers-box-active');
+		$parent_class.addClass('bounce animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+		});
+		$("#add-followers-button").addClass('animated infinite jello');
+	}
+	function resetAllFollowersBoxes() {
+		var $followers_list = $('.amount-of-followers-selection-item-wrapper-1, .amount-of-followers-selection-item-wrapper-2, .amount-of-followers-selection-item-wrapper-3');
+		if ($followers_list.hasClass('followers-box-active')) {
+			$followers_list.removeClass('followers-box-active');
+		}
+	}
 
-    function fixFollowersBox($parent_class) {
-        resetAllFollowersBoxes();
-        if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-1')) {
-            $selected_followers = '1000';
-        }
-        if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-2')) {
-            $selected_followers = '2500';
-        }
-        if ($parent_class.hasClass('amount-of-followers-selection-item-wrapper-3')) {
-            $selected_followers = '5000';
-        }
-        $parent_class.addClass('followers-box-active');
-        $parent_class.addClass('bounce animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {});
-        $("#add-followers-button").addClass('animated infinite jello');
-    }
+	function progressBarConsole(percent, $element) {
+		var progressBarConsoleWidth = percent * $element.width() / 100;
+		$element.find('div').animate({ width: progressBarConsoleWidth }, 500).html(percent + "%&nbsp;");
+	}
+	progressBarConsole(0, $('#progressBarConsole'));
 
-    function resetAllFollowersBoxes() {
-        var $followers_list = $('.amount-of-followers-selection-item-wrapper-1, .amount-of-followers-selection-item-wrapper-2, .amount-of-followers-selection-item-wrapper-3');
-        if ($followers_list.hasClass('followers-box-active')) {
-            $followers_list.removeClass('followers-box-active');
-        }
-    }
+	$('.add-followers-button').click(function () {
+		if ($selected_followers != '') {
+			var $currentFollowersValue = parseInt($('#current-followers-value').text());
+			var $selectedFollowersValue = parseInt($selected_followers);
+			var $newFollowersValue = $currentFollowersValue + $selectedFollowersValue;
+			$.magnificPopup.open({
+				items: {
+					src: '#adding-followers-console-notice-wrapper',
+				},
+				type: 'inline',
+				preloader: false,
+				modal: true,
+				mainClass: 'mfp-fade',
+				callbacks: {
+					open: function () {
+						$('#console-notice-followers-value').html($selected_followers);
+						$('#console-notice-followers-new-value').html($newFollowersValue);
+					},
+					close: function () {
+						console.log('closed');
+					}
+				}
+			});
+		}
+		else {
+			sweetAlert("Error", "Please select the amount of followers you wish to generate.", "error");
+		}
+	});
 
-    function progressBarConsole(percent, $element) {
-        var progressBarConsoleWidth = percent * $element.width() / 100;
-        $element.find('div').animate({
-            width: progressBarConsoleWidth
-        }, 500).html(percent + "%&nbsp;");
-    }
-    progressBarConsole(0, $('#progressBarConsole'));
+	$('#console-notice-go-back').click(function () {
+		$.magnificPopup.close();
+	});
 
-    $('.add-followers-button').click(function() {
-        if ($selected_followers != '') {
-            var $currentFollowersValue = parseInt($('#current-followers-value').text());
-            var $selectedFollowersValue = parseInt($selected_followers);
-            var $newFollowersValue = $currentFollowersValue + $selectedFollowersValue;
-            $.magnificPopup.open({
-                items: {
-                    src: '#adding-followers-console-notice-wrapper',
-                },
-                type: 'inline',
-                preloader: false,
-                modal: true,
-                mainClass: 'mfp-fade',
-                callbacks: {
-                    open: function() {
-                        $('#console-notice-followers-value').html($selected_followers);
-                        $('#console-notice-followers-new-value').html($newFollowersValue);
-                    },
-                    close: function() {
-                        console.log('closed');
-                    }
-                }
-            });
-        } else {
-            sweetAlert("Error", "Please select the amount of followers you wish to generate.", "error");
-        }
-    });
+	$('#generate-followers-button').click(function () {
+		var $console_message_username = $('#console-username-val').text();
+		var $currentFollowersValue = parseInt($('#current-followers-value').text());
+		var $selectedFollowersValue = parseInt($selected_followers);
+		var $newFollowersValue = $currentFollowersValue + $selectedFollowersValue;
+		$('.go-back-wrapper').hide();
+		$.magnificPopup.close();
+		$(".amount-of-followers-selection-wrapper").fadeOut(function () {
+			$(".adding-followers-console-animation-wrapper").fadeIn();
+		});
+		setTimeout(function () {
+			$(".adding-followers-console-animation-wrapper").fadeOut(function () {
+				$(".adding-followers-console-wrapper").fadeIn();
+				if ($(window).width() < 960) {
+					$('html, body').animate({
+						scrollTop: $(".adding-followers-console-wrapper").offset().top
+					}, 1000);
+				}
+				progressBarConsole(0, $('#progressBarConsole'));
+			});
+		}, 2500);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$('.console-message').html('<span class="console-message-success">Files loaded Successfully</span>');
+			progressBarConsole(10, $('#progressBarConsole'));
+		}, 4500);
+		setTimeout(function () {
+			$(".fountainG").fadeIn();
+			$('.console-message').html('Connecting to TikTok API...');
+			progressBarConsole(15, $('#progressBarConsole'));
+		}, 6500);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$('.console-message').html('<span class="console-message-success">Successfully connected</span>');
+		}, 8500);
+		setTimeout(function () {
+			$(".fountainG").fadeIn();
+			$('.console-message').html('Forwarding User ID for Account <span class="console-message-highlighted">' + $console_message_username + '</span>');
+			progressBarConsole(30, $('#progressBarConsole'));
+		}, 10000);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$('.console-message').html('<span class="console-message-success">User ID Successfully Forwarded</span>');
+			progressBarConsole(35, $('#progressBarConsole'));
+		}, 13500);
+		setTimeout(function () {
+			$('.console-message').html('Establishing Connection with internal Followers Database');
+			progressBarConsole(38, $('#progressBarConsole'));
+		}, 15500);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$('.console-message').html('<span class="console-message-success">Connection with Database Established</span>');
+			progressBarConsole(47, $('#progressBarConsole'));
+		}, 17500);
+		setTimeout(function () {
+			$(".fountainG").fadeIn();
+			$('.console-message').html('Preparing to Inject <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> Followers to Account <span class="console-message-highlighted">' + $console_message_username + '</span>');
+			progressBarConsole(52, $('#progressBarConsole'));
+		}, 20000);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$("#console-new-followers").fadeIn(function () {
+				$('#console-new-followers-value').countTo({
+					from: $currentFollowersValue,
+					to: $newFollowersValue,
+					speed: 3000,
+					refreshInterval: 10,
+					formatter: function (value, options) {
+						return value.toFixed(options.decimals);
+					}
+				});
+				$('#current-followers-value').countTo({
+					from: $currentFollowersValue,
+					to: $newFollowersValue,
+					speed: 3000,
+					refreshInterval: 10,
+					formatter: function (value, options) {
+						return value.toFixed(options.decimals);
+					}
+				});
+			});
+			$('.console-message').html('Adding <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> Followers');
+			progressBarConsole(55, $('#progressBarConsole'));
+		}, 22000);
+		setTimeout(function () {
+			$('.console-message').html('<span class="console-message-success">Successfully added</span> <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> <span class="console-message-success">Followers</span>');
+			$('#console-new-followers').addClass('bounce animated completed').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+				$(this).removeClass('bounce animated');
+			});
+			progressBarConsole(80, $('#progressBarConsole'));
+		}, 27000);
+		setTimeout(function () {
+			$("#console-new-followers").fadeOut(function () {
+				$(".fountainG").fadeIn();
+				$('.console-message').html('Cleaning up Injection Traces');
+				progressBarConsole(88, $('#progressBarConsole'));
+			});
+		}, 29000);
+		setTimeout(function () {
+			$('.console-message').html('Performing Automatic Human Verification...');
+			progressBarConsole(92, $('#progressBarConsole'));
+		}, 31000);
+		setTimeout(function () {
+			$(".fountainG").hide();
+			$('.console-message').html('<span class="console-message-error">Automatic Human Verification Failed...</span>');
+			progressBarConsole(92, $('#progressBarConsole'));
+		}, 33500);
+		setTimeout(function () {
+			$('.console-message').html('Manual Human Verification Required');
+			progressBarConsole(92, $('#progressBarConsole'));
+		}, 35500);
+		setTimeout(function () {
+			$(".adding-followers-console-wrapper").fadeOut(function () {
+				$(".adding-followers-console-animation-wrapper").fadeIn();
+			});
+		}, 37500);
+		setTimeout(function () {
+			$(".adding-followers-console-animation-wrapper").fadeOut(function () {
+				$(".human-verification-wrapper").fadeIn();
+				$(".fountainG").fadeIn();
+				if ($(window).width() < 960) {
+					$('html, body').animate({
+						scrollTop: $(".human-verification-wrapper").offset().top
+					}, 1000);
+				}
+			});
+		}, 38500);
+	});
 
-    $('#console-notice-go-back').click(function() {
-        $.magnificPopup.close();
-    });
+	// =================================================================
+	// =================================================================
+	// =============== By MCh CPA 2021 : Re-skinning GRP ===============
+	// =================================================================
+	// =================================================================
 
-    $('#generate-followers-button').click(function() {
-        var $console_message_username = $('#console-username-val').text();
-        var $currentFollowersValue = parseInt($('#current-followers-value').text());
-        var $selectedFollowersValue = parseInt($selected_followers);
-        var $newFollowersValue = $currentFollowersValue + $selectedFollowersValue;
-        $('.go-back-wrapper').hide();
-        $.magnificPopup.close();
-        $(".amount-of-followers-selection-wrapper").fadeOut(function() {
-            $(".adding-followers-console-animation-wrapper").fadeIn();
-        });
-        setTimeout(function() {
-            $(".adding-followers-console-animation-wrapper").fadeOut(function() {
-                $(".adding-followers-console-wrapper").fadeIn();
-                if ($(window).width() < 960) {
-                    $('html, body').animate({
-                        scrollTop: $(".adding-followers-console-wrapper").offset().top
-                    }, 1000);
-                }
-                progressBarConsole(0, $('#progressBarConsole'));
-            });
-        }, 2500);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $('.console-message').html('<span class="console-message-success">Files loaded Successfully</span>');
-            progressBarConsole(10, $('#progressBarConsole'));
-        }, 4500);
-        setTimeout(function() {
-            $(".fountainG").fadeIn();
-            $('.console-message').html('Connecting to TikTok API...');
-            progressBarConsole(15, $('#progressBarConsole'));
-        }, 6500);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $('.console-message').html('<span class="console-message-success">Successfully connected</span>');
-        }, 8500);
-        setTimeout(function() {
-            $(".fountainG").fadeIn();
-            $('.console-message').html('Forwarding User ID for Account <span class="console-message-highlighted">' + $console_message_username + '</span>');
-            progressBarConsole(30, $('#progressBarConsole'));
-        }, 10000);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $('.console-message').html('<span class="console-message-success">User ID Successfully Forwarded</span>');
-            progressBarConsole(35, $('#progressBarConsole'));
-        }, 13500);
-        setTimeout(function() {
-            $('.console-message').html('Establishing Connection with internal Followers Database');
-            progressBarConsole(38, $('#progressBarConsole'));
-        }, 15500);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $('.console-message').html('<span class="console-message-success">Connection with Database Established</span>');
-            progressBarConsole(47, $('#progressBarConsole'));
-        }, 17500);
-        setTimeout(function() {
-            $(".fountainG").fadeIn();
-            $('.console-message').html('Preparing to Inject <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> Followers to Account <span class="console-message-highlighted">' + $console_message_username + '</span>');
-            progressBarConsole(52, $('#progressBarConsole'));
-        }, 20000);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $("#console-new-followers").fadeIn(function() {
-                $('#console-new-followers-value').countTo({
-                    from: $currentFollowersValue,
-                    to: $newFollowersValue,
-                    speed: 3000,
-                    refreshInterval: 10,
-                    formatter: function(value, options) {
-                        return value.toFixed(options.decimals);
-                    }
-                });
-                $('#current-followers-value').countTo({
-                    from: $currentFollowersValue,
-                    to: $newFollowersValue,
-                    speed: 3000,
-                    refreshInterval: 10,
-                    formatter: function(value, options) {
-                        return value.toFixed(options.decimals);
-                    }
-                });
-            });
-            $('.console-message').html('Adding <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> Followers');
-            progressBarConsole(55, $('#progressBarConsole'));
-        }, 22000);
-        setTimeout(function() {
-            $('.console-message').html('<span class="console-message-success">Successfully added</span> <span class="console-message-highlighted">' + $selectedFollowersValue + '</span> <span class="console-message-success">Followers</span>');
-            $('#console-new-followers').addClass('bounce animated completed').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-                $(this).removeClass('bounce animated');
-            });
-            progressBarConsole(80, $('#progressBarConsole'));
-        }, 27000);
-        setTimeout(function() {
-            $("#console-new-followers").fadeOut(function() {
-                $(".fountainG").fadeIn();
-                $('.console-message').html('Cleaning up Injection Traces');
-                progressBarConsole(88, $('#progressBarConsole'));
-            });
-        }, 29000);
-        setTimeout(function() {
-            $('.console-message').html('Performing Automatic Human Verification...');
-            progressBarConsole(92, $('#progressBarConsole'));
-        }, 31000);
-        setTimeout(function() {
-            $(".fountainG").hide();
-            $('.console-message').html('<span class="console-message-error">Automatic Human Verification Failed...</span>');
-            progressBarConsole(92, $('#progressBarConsole'));
-        }, 33500);
-        setTimeout(function() {
-            $('.console-message').html('Manual Human Verification Required');
-            progressBarConsole(92, $('#progressBarConsole'));
-        }, 35500);
-        setTimeout(function() {
-            $(".adding-followers-console-wrapper").fadeOut(function() {
-                $(".adding-followers-console-animation-wrapper").fadeIn();
-            });
-        }, 37500);
-        setTimeout(function() {
-            $(".adding-followers-console-animation-wrapper").fadeOut(function() {
-                $(".human-verification-wrapper").fadeIn();
-                $(".fountainG").fadeIn();
-                if ($(window).width() < 960) {
-                    $('html, body').animate({
-                        scrollTop: $(".human-verification-wrapper").offset().top
-                    }, 1000);
-                }
-            });
-        }, 38500);
-    });
+	$("#go-back").click(function () {
+		window.location.href = 'index.php';
+	});
 
-    // =================================================================
-    // =================================================================
-    // =============== By MCh CPA 2021 : Re-skinning GRP ===============
-    // =================================================================
-    // =================================================================
+	$("#error-go-back-button").click(function () {
+		window.location.href = 'index.php';
+	});
 
-    $("#go-back").click(function() {
-        window.location.href = 'index.php';
-    });
+	$('#username-example-img-link').magnificPopup({
+		type: 'image',
+		mainClass: 'mfp-with-zoom',
+		zoom: {
+			enabled: true,
+			duration: 300,
+			easing: 'ease-in-out',
+			opener: function (openerElement) {
+				return openerElement.is('img') ? openerElement : openerElement.find('img');
+			}
+		}
 
-    $("#error-go-back-button").click(function() {
-        window.location.href = 'index.php';
-    });
+	});
 
-    $('#username-example-img-link').magnificPopup({
-        type: 'image',
-        mainClass: 'mfp-with-zoom',
-        zoom: {
-            enabled: true,
-            duration: 300,
-            easing: 'ease-in-out',
-            opener: function(openerElement) {
-                return openerElement.is('img') ? openerElement : openerElement.find('img');
-            }
-        }
+	$('.match-height').matchHeight();
 
-    });
+	$(".fit-vids-me").fitVids();
 
-    $('.match-height').matchHeight();
-
-    $(".fit-vids-me").fitVids();
-
-    $('.popup-tos').magnificPopup({
-        type: 'inline',
-        preloader: false
-    });
-    $('.popup-contact').magnificPopup({
-        type: 'inline',
-        preloader: false
-    });
-    $('.popup-pp').magnificPopup({
-        type: 'inline',
-        preloader: false
-    });
+	$('.popup-tos').magnificPopup({
+		type: 'inline',
+		preloader: false
+	});
+	$('.popup-contact').magnificPopup({
+		type: 'inline',
+		preloader: false
+	});
+	$('.popup-pp').magnificPopup({
+		type: 'inline',
+		preloader: false
+	});
 
 });
 
@@ -280,14 +278,14 @@ var ee;
 var chat_count_num = 235;
 
 function chat_count() {
-    document.getElementById("online2").innerHTML = chat_count_num;
-    var randWay = Math.floor(Math.random() * 10 + 1);
-    if (randWay <= 5) {
-        chat_count_num = chat_count_num + Math.floor(Math.random() * 10 + 1);;
-    } else {
-        chat_count_num = chat_count_num - Math.floor(Math.random() * 10 + 1);;
-    }
-    ee = setTimeout("chat_count()", 1000);
+	document.getElementById("online2").innerHTML = chat_count_num;
+	var randWay = Math.floor(Math.random() * 10 + 1);
+	if (randWay <= 5) {
+		chat_count_num = chat_count_num + Math.floor(Math.random() * 10 + 1);;
+	} else {
+		chat_count_num = chat_count_num - Math.floor(Math.random() * 10 + 1);;
+	}
+	ee = setTimeout("chat_count()", 1000);
 }
 chat_count();
 
@@ -299,104 +297,104 @@ var ChatContent = ["How much  TikTok followers can I generate?", "Anyone tried t
 var ChatAntiBot = ["Fuck you I'm not a bot", "Does this sound like a bot to you noob?", "yeah we're all bots Kappa", "bot? i'm here for spamming this shit lol", "are you stupid or something? they have anti bot protection", "sure bot, 0101010110 lmao xD", "no, we're not bots Kappa"];
 
 
-$(document).ready(function() {
+$(document).ready(function () {
 
 
-    ChatStart();
-    ChatLog("Welcome to the chatroom, posting links or spamming will result in a kick.");
-    ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], ChatContent[rng(0, ChatContent['length'] - 1)]);
-    $('#live-chat-input')['keypress'](function(_0xaa63xc) {
-        if (_0xaa63xc['keyCode'] == 13) {
-            $('#live-chat-button')['click']();
-        };
-    });
-    $('#live-chat-button')['click'](function() {
-        if (ChatUserName == '') {
-            $('#live-chat-name-wrapper')['fadeIn'](250);
-            $('.live-chat-overlay').fadeIn(200);
-        } else {
-            $msg = $('#live-chat-input')['val']();
+	ChatStart();
+	ChatLog("Welcome to the chatroom, posting links or spamming will result in a kick.");
+	ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], ChatContent[rng(0, ChatContent['length'] - 1)]);
+	$('#live-chat-input')['keypress'](function (_0xaa63xc) {
+		if (_0xaa63xc['keyCode'] == 13) {
+			$('#live-chat-button')['click']();
+		};
+	});
+	$('#live-chat-button')['click'](function () {
+		if (ChatUserName == '') {
+			$('#live-chat-name-wrapper')['fadeIn'](250);
+			$('.live-chat-overlay').fadeIn(200);
+		} else {
+			$msg = $('#live-chat-input')['val']();
 
-            ChatAddEntry('<span>' + ChatUserName + '</span>', $msg);
-            $('#live-chat-input')['val']('');
-            if ($msg.indexOf("bots") >= 0 || $msg.indexOf("bot") >= 0 || $msg.indexOf("robots") >= 0) {
-                setTimeout(function() {
-                    ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>' + ChatAntiBot[rng(0, ChatAntiBot['length'] - 1)]);
-                }, rng(7250, 9300));
-            }
-            if (!ChatReplied) {
-                setTimeout(function() {
-                    ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>  lol stop spamming and just use the followers generator');
+			ChatAddEntry('<span>' + ChatUserName + '</span>', $msg);
+			$('#live-chat-input')['val']('');
+			if ($msg.indexOf("bots") >= 0 || $msg.indexOf("bot") >= 0 || $msg.indexOf("robots") >= 0) {
+				setTimeout(function () {
+					ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>' + ChatAntiBot[rng(0, ChatAntiBot['length'] - 1)]);
+				}, rng(7250, 9300));
+			}
+			if (!ChatReplied) {
+				setTimeout(function () {
+					ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>  lol stop spamming and just use the followers generator');
 
-                    setTimeout(function() {
-                        ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>  is this your first time here? this is like the only legit TikTok followers generator on the web');
-                        setTimeout(function() {
-                            ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], 'guys dont listen to ' + '<span class="mention">' + ChatUserName + ' &nbsp;</span> ' + ' he just wants all the followers for himself haha');
+					setTimeout(function () {
+						ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], '<span class="mention">' + ChatUserName + ' &nbsp;</span>  is this your first time here? this is like the only legit TikTok followers generator on the web');
+						setTimeout(function () {
+							ChatAddEntry(ChatUserNames[Random(0, ChatUserNames['length'] - 1)], 'guys dont listen to ' + '<span class="mention">' + ChatUserName + ' &nbsp;</span> ' + ' he just wants all the followers for himself haha');
 
-                        }, rng(11500, 19500));
-                    }, rng(6500, 8500));
-                }, rng(6000, 9500));
-                ChatReplied = true;
-            }
-        };
-    });
-    $('#live-chat-name-confirm-button')['click'](function() {
-        ChatUserName = $('#live-chat-name')['val']();
-        $('#live-chat-name-wrapper')['fadeOut'](250, function() {
-            $('.live-chat-overlay').fadeOut(200, function() {
-                $('#live-chat-button')['click']();
-            });
-        });
-    });
+						}, rng(11500, 19500));
+					}, rng(6500, 8500));
+				}, rng(6000, 9500));
+				ChatReplied = true;
+			}
+		};
+	});
+	$('#live-chat-name-confirm-button')['click'](function () {
+		ChatUserName = $('#live-chat-name')['val']();
+		$('#live-chat-name-wrapper')['fadeOut'](250, function () {
+			$('.live-chat-overlay').fadeOut(200, function () {
+				$('#live-chat-button')['click']();
+			});
+		});
+	});
 
 
 });
 
-Date.prototype.getFullMinutes = function() {
-    if (this.getMinutes() < 10) {
-        return '0' + this.getMinutes();
-    }
-    return this.getMinutes();
+Date.prototype.getFullMinutes = function () {
+	if (this.getMinutes() < 10) {
+		return '0' + this.getMinutes();
+	}
+	return this.getMinutes();
 };
 
 function rng(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+	return Math.floor(Math.random() * (max - min + 1) + min);
 
 }
-$(function() {
+$(function () {
 
-    $('#livechatInputComment').focus(function() {
-        $('#livechatContainerAdditional').slideDown(500);
-    });
+	$('#livechatInputComment').focus(function () {
+		$('#livechatContainerAdditional').slideDown(500);
+	});
 });
 
 function Random(_0xaa63x2, _0xaa63x3) {
-    return Math['floor'](Math['random']() * (_0xaa63x3 - _0xaa63x2) + _0xaa63x2);
+	return Math['floor'](Math['random']() * (_0xaa63x3 - _0xaa63x2) + _0xaa63x2);
 };
 
 function ChatAddEntry(_0xaa63x5, _0xaa63x6) {
-    if (_0xaa63x5 == '' || _0xaa63x6 == '') {
-        return;
-    };
-    $('<div class=\"livechatChatEntry\"><span class=\"live-chat-content-username\">[' + ChatDate.getHours() + ':' + ChatDate.getFullMinutes() + ']  ' + _0xaa63x5 + ':</span><span class=\"livechatEntryContent\">' + _0xaa63x6 + '</span></div>')['appendTo']('#live-chat-content')['hide'](0)['fadeIn'](250);
-    $('#live-chat-content')['scrollTop']($('#live-chat-content')[0]['scrollHeight']);
+	if (_0xaa63x5 == '' || _0xaa63x6 == '') {
+		return;
+	};
+	$('<div class=\"livechatChatEntry\"><span class=\"live-chat-content-username\">[' + ChatDate.getHours() + ':' + ChatDate.getFullMinutes() + ']  ' + _0xaa63x5 + ':</span><span class=\"livechatEntryContent\">' + _0xaa63x6 + '</span></div>')['appendTo']('#live-chat-content')['hide'](0)['fadeIn'](250);
+	$('#live-chat-content')['scrollTop']($('#live-chat-content')[0]['scrollHeight']);
 };
 
 function ChatLog(_0xaa63x6) {
-    $('<div class=\"livechatChatEntry\"><span class=\"live-chat-intro-message\">' + _0xaa63x6 + '</span></div>')['appendTo']('#live-chat-content')['hide'](0)['fadeIn'](250);
-    $('#live-chat-content')['scrollTop']($('#live-chat-content')[0]['scrollHeight']);
+	$('<div class=\"livechatChatEntry\"><span class=\"live-chat-intro-message\">' + _0xaa63x6 + '</span></div>')['appendTo']('#live-chat-content')['hide'](0)['fadeIn'](250);
+	$('#live-chat-content')['scrollTop']($('#live-chat-content')[0]['scrollHeight']);
 };
 
 function ChatStart() {
-    var _0xaa63x8 = function() {
-        setTimeout(function() {
-            var _0xaa63x9 = ChatUserNames[Random(0, ChatUserNames['length'] - 1)];
-            var _0xaa63xa = ChatContent[Random(0, ChatContent['length'] - 1)];
-            ChatAddEntry(_0xaa63x9, _0xaa63xa);
-            _0xaa63x8();
-        }, Random(1000, 15000));
-    };
-    _0xaa63x8();
+	var _0xaa63x8 = function () {
+		setTimeout(function () {
+			var _0xaa63x9 = ChatUserNames[Random(0, ChatUserNames['length'] - 1)];
+			var _0xaa63xa = ChatContent[Random(0, ChatContent['length'] - 1)];
+			ChatAddEntry(_0xaa63x9, _0xaa63xa);
+			_0xaa63x8();
+		}, Random(1000, 15000));
+	};
+	_0xaa63x8();
 };
 
 // =================================================================
